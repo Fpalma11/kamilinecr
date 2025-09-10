@@ -1,0 +1,2051 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catálogo de Figuras</title>
+  <style>
+    body {
+      background: #f8f8f8;
+      color: #222;
+      padding: 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2rem;
+      color: #333;
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+    }
+    .logo-container img {
+      max-width: 180px;
+      width: auto;
+      height: auto;
+    }
+
+    .search-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .search-container input {
+      width: 100%;
+      max-width: 500px;
+      padding: 12px 20px;
+      font-size: 1.1rem;
+      border: 2px solid #ddd;
+      border-radius: 25px;
+      outline: none;
+      transition: 0.3s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .search-container input:focus {
+      border-color: #ff3b3b;
+      box-shadow: 0 2px 8px rgba(255, 59, 59, 0.2);
+    }
+
+    .results-count {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #666;
+      font-size: 1rem;
+    }
+
+    .catalog {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 25px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .card img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    .card h3 {
+      font-size: 1rem;
+      text-align: center;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .anime-tag {
+      background: #ff3b3b;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+    .card .price {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #ff3b3b;
+      margin-bottom: 15px;
+    }
+    .interest-btn {
+      background: #405DE6; /* Color azul de Instagram */
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: 0.3s;
+      margin-top: auto;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    } 
+    .interest-btn:hover {
+     background: #3751c2;
+     transform: scale(1.05);
+    }
+    .instagram-icon {
+      width: 18px;
+      height: 18px;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Catálogo de Figuras</h1>
+
+  <div class="logo-container">
+    <img src="img/logo kami line.PNG" alt="Logo de la tienda" onerror="this.style.display='none'">
+  </div>
+
+  <div class="search-container">
+    <input type="text" id="search" placeholder="🔍 Busca por anime o personaje...">
+  </div>
+
+  <div class="results-count" id="results-count"></div>
+
+  <div class="catalog" id="catalog"></div>
+
+  <script>
+    // 🔹 JSON de productos
+    const data = {
+  "productos": [
+    {
+      "nombre": "Power Pole Extensible Dragon Ball Daima",
+      "anime": "Dragon Ball",
+      "precio": 21850,
+      "imagen": "img/powe_pole.jpg"
+    },
+    {
+      "nombre": "Izuku Midoriya - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/izuku_midoriya.jpg"    
+    },
+    {
+      "nombre": "Liliel Medical Corps - 2.5 Dimensional Seduction",
+      "anime": "2.5 Dimensional Seduction",
+      "precio": 17850,
+      "imagen": "img/liliel_medical_corps.jpg"  
+    },
+    {
+      "nombre": "Ririsa Amano Uniform - 2.5 Dimensional Seduction",
+      "anime": "2.5 Dimensional Seduction",
+      "precio": 17850,
+      "imagen": "img/ririsa_amano_uniform.jpg"  
+    },
+    {
+      "nombre": "Liliel Glitter & Glamorous - 2.5 Dimensional Seduction",
+      "anime": "2.5 Dimensional Seduction",
+      "precio": 17850,
+      "imagen": "img/liliel_glitter_and_glamorous.jpg"
+    },
+    {
+      "nombre": "Ariel Angel Paratroopers - 2.5 Dimensional Seduction",
+      "anime": "2.5 Dimensional Seduction",
+      "precio": 17850,
+      "imagen": "img/ariel_angel_paratroopers.jpg"
+    },
+    {
+      "nombre": "Liliel Medical Corps Glitter Edition",
+      "anime": "2.5 Dimensional Seduction",
+      "precio": 17850,
+      "imagen": "img/liliel_medical_corps_glitter_edition.jpg"
+    },
+    {
+      "nombre": "Miriella Medical - 2.5 Dimensional Seduction",
+      "anime": "2.5 Dimensional Seduction",
+      "precio": 17850,
+      "imagen": "img/miriella_medical.jpg"
+    },
+    {
+      "nombre": "Miriella Angel - 2.5 Dimensional Seduction",
+      "anime": "2.5 Dimensional Seduction",
+      "precio": 17850,
+      "imagen": "img/miriella_angel.jpg"
+    },
+    {
+      "nombre": "Beelzebub - Sand Land Dragon Star",
+      "anime": "Dragon Ball",
+      "precio": 21850,
+      "imagen": "img/beelzebub.jpg"
+    },
+    {
+      "nombre": "Ichigo Kurosaki Maximatic - Bleach",
+      "anime": "Bleach",
+      "precio": 20850,
+      "imagen": "img/ichigo_kurosaki.jpg"
+    },
+    {
+      "nombre": "Rukia Kuchiki Relax Time - Bleach",
+      "anime": "Bleach",
+      "precio": 17850,
+      "imagen": "img/rukia_kuchiki.jpg"
+    },
+    {
+      "nombre": "Toshiro Hitsugaya Solid and Souls - Bleach",
+      "anime": "Bleach",
+      "precio": 17850,
+      "imagen": "img/toshiro_bleach.jpg"
+    },
+    {
+      "nombre": "Kenpachi Zaraki Vibration Stars - Bleach",
+      "anime": "Bleach",
+      "precio": 17850,
+      "imagen": "img/kenpachi_zaraki.jpg"
+    },
+    {
+      "nombre": "Grimmjow Jaegerjaques Vibration Stars - Bleach",
+      "anime": "Bleach",
+      "precio": 17850,
+      "imagen": "img/grimmjow_jaegerjaques.jpg"
+    },
+    {
+      "nombre": "Broly ssj Dragon Stars Articulado",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/broly_dragon_star.jpg"
+    },
+    {
+      "nombre": "Broly Base Super Dragon Stars Articulado",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/broly_super_dragon_ball.jpg"
+    },
+    {
+      "nombre": "Cell Forma Final Dragon Star",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/cell_forma_final.jpg"
+    },
+    {
+      "nombre": "Break Time Collection Vol 2 - Chainsaw Man",
+      "anime": "Chainsaw Man",
+      "precio": 17850,
+      "imagen": "img/break_time_collection_vol_2.jpg"
+    },
+    {
+      "nombre": "Power Vibration Star - Chainsaw Man",
+      "anime": "Chainsaw Man",
+      "precio": 17850,
+      "imagen": "img/power_vibration_star.jpg"
+    },
+    {
+      "nombre": "Power Vibration Star Edition 2 - Chainsaw Man",
+      "anime": "Chainsaw Man",
+      "precio": 17850,
+      "imagen": "img/power_vibration_star_edition_2.jpg"
+    },
+    {
+      "nombre": "Aki Hayakawa Spirits - Chainsaw Man",
+      "anime": "Chainsaw Man",
+      "precio": 18850,
+      "imagen": "img/aki_hayakawa_spirits.jpg"
+    },
+    {
+      "nombre": "Denji Vibration Star - Chainsaw Man",
+      "anime": "Chainsaw Man",
+      "precio": 18850,
+      "imagen": "img/denji_vibration_star.jpg"
+    },
+    {
+      "nombre": "Deku BraveGraph #1 - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/deku_bravegraph_1.jpg"
+    },
+    {
+      "nombre": "Deku Age of Heroes #3 - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/deku_age_of_heroes_3.jpg"
+    },
+    {
+      "nombre": "Deku The Amazing Heroes - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/deku_the_amazing_heroes.jpg"
+    },
+    {
+      "nombre": "Kanao Tsuyuri Vol 7 - Demon Slayer",
+      "anime": "Demon Slayer",
+      "precio": 17850,
+      "imagen": "img/kanao_tsuyuri_vol_7.jpg"
+    },
+    {
+      "nombre": "Kyoujro Rengoku Figure EX - Demon Slayer",
+      "anime": "Demon Slayer",
+      "precio": 18850,
+      "imagen": "img/kyoujro_rengoku_figure_ex.jpg"
+    },
+    {
+      "nombre": "Inosuke Hashibara Grandista - Demon Slayer",
+      "anime": "Demon Slayer",
+      "precio": 25000,
+      "imagen": "img/inosuke_hashibara_grandista.jpg"
+    },
+    {
+      "nombre": "Daki & Gyutaro EX Demon Series - Demon Slayer",
+      "anime": "Demon Slayer",
+      "precio": 17850,
+      "imagen": "img/daki_gyutaro_ex_demon_series.jpg"
+    },
+    {
+      "nombre": "Mitsuri Kanroji Maximatic - Demon Slayer",
+      "anime": "Demon Slayer",
+      "precio": 18850,
+      "imagen": "img/mitsuri_kanroji_maximatic.jpg"
+    },
+    {
+      "nombre": "Inosuke Vibration Stars - Demon Slayer",
+      "anime": "Demon Slayer",
+      "precio": 18850,
+      "imagen": "img/inosuke_vibration_stars.jpg"
+    },
+    {
+      "nombre": "Kanao Tsuyuri Vibration Stars - Demon Slayer",
+      "anime": "Demon Slayer",
+      "precio": 17850,
+      "imagen": "img/kanao_tsuyuri_vibration_stars.jpg"
+    },
+    {
+      "nombre": "Tanjiro Kamado Maximatic 19cm - Demon Slayer",
+      "anime": "Demon Slayer",
+      "precio": 20850,
+      "imagen": "img/tanjiro_kamado_maximatic_19cm.jpg"
+    },
+    {
+      "nombre": "Tanjiro Kamado Figure EX - Demon Slayer",
+      "anime": "Demon Slayer",
+      "precio": 18850,
+      "imagen": "img/tanjiro_kamado_figure_ex.jpg"
+    },
+    {
+      "nombre": "Mitsuri Kanroji Vol 42 - Demon Slayer",
+      "anime": "Demon Slayer",
+      "precio": 17850,
+      "imagen": "img/mitsuri_kanroji_vol_42.jpg"
+    },
+    {
+      "nombre": "Daki Vol 8 - Demon Slayer",
+      "anime": "Demon Slayer",
+      "precio": 17850,
+      "imagen": "img/daki_vol_8.jpg"
+    },
+    {
+      "nombre": "Daki Vol 9 - Demon Slayer",
+      "anime": "Demon Slayer",
+      "precio": 17850,
+      "imagen": "img/daki_vol_9.jpg"
+    },
+    {
+      "nombre": "Daki Demon Series - Demon Slayer",
+      "anime": "Demon Slayer",
+      "precio": 17850,
+      "imagen": "img/daki_demon_series.jpg"
+    },
+    {
+      "nombre": "Takeru y Patamon DXF - Digimon",
+      "anime": "Digimon",
+      "precio": 22850,
+      "imagen": "img/takeru_y_patamon_dxf.jpg"
+    },
+    {
+      "nombre": "Yamato y Gabumon DXF - Digimon",
+      "anime": "Digimon",
+      "precio": 22850,
+      "imagen": "img/yamato_y_gabumon_dxf.jpg"
+    },
+    {
+      "nombre": "Bardock Super Blood of Saiyans - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/bardock_super_blood_of_saiyans.jpg"
+    },
+    {
+      "nombre": "Super Saiyan Gohan Great Saiyaman Clearise - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/super_saiyan_gohan_great_saiyaman_clearise.jpg"
+    },
+    {
+      "nombre": "Majin Buu Daima with Panel - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/majin_buu_daima_with_panel.jpg"
+    },
+    {
+      "nombre": "Son Goku Mini Daima - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/son_goku_mini_daima.jpg"
+    },
+    {
+      "nombre": "Supreme Kai Mini with Panel - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/supreme_kai_mini_with_panel.jpg"
+    },
+    {
+      "nombre": "Super Androide #17 GT Match Makers - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 18850,
+      "imagen": "img/super_androide_17_gt_match_makers.jpg"
+    },
+    {
+      "nombre": "Majin Buu GX Materia - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/majin_buu_gx_materia.jpg"
+    },
+    {
+      "nombre": "Vegito GX Materia - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/vegito_gx_materia.jpg"
+    },
+    {
+      "nombre": "Son Gohan 2 GXMateria - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/son_gohan_2_gxmateria.jpg"
+    },
+    {
+      "nombre": "Piccolo GXMateria - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/piccolo_gxmateria.jpg"
+    },
+    {
+      "nombre": "Androide 16 Hero GXMateria - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/androide_16_hero_gxmateria.jpg"
+    },
+    {
+      "nombre": "Son Goku 3 GXMateria - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/son_goku_3_gxmateria.jpg"
+    },
+    {
+      "nombre": "Son Goku con Alas de Angel History Box - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/son_goku_con_alas_de_angel_history_box.jpg"
+    },
+    {
+      "nombre": "Freezer/Frieza History Box Vol 5 - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/freezer_frieza_history_box_vol_5.jpg"
+    },
+    {
+      "nombre": "Mecha Frieza vs Omnibus Great Ichibansho - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 37850,
+      "imagen": "img/mecha_frieza_vs_omnibus_great_ichibansho.jpg"
+    },
+    {
+      "nombre": "Super Saiyan Son Goku GT Match Makers - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 18850,
+      "imagen": "img/super_saiyan_son_goku_match_makers.jpg"
+    },
+    {
+      "nombre": "Janemba Match Makers - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 18850,
+      "imagen": "img/janemba_match_makers.jpg"
+    },
+    {
+      "nombre": "Super Saiyan Gogeta Match Makers - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 18850,
+      "imagen": "img/super_saiyan_gogeta_match_makers.jpg"
+    },
+    {
+      "nombre": "Androide #17 Solid Edge Works - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 18850,
+      "imagen": "img/androide_17_solid_edge_works.jpg"
+    },
+    {
+      "nombre": "Androide #18 Solid Edge Works - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 18850,
+      "imagen": "img/androide_18_solid_edge_works.jpg"
+    },
+    {
+      "nombre": "Trunks Super Saiyan Solid Edge Works - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/trunks_super_saiyan_solid_edge_works.jpg"
+    },
+    {
+      "nombre": "Son Goku Daima with Panel - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/son_goku_daima_with_panel.jpg"
+    },
+    {
+      "nombre": "Rose Goku Clearise - Dragon Ball Super",
+      "anime": "Dragon Ball",
+      "precio": 18850,
+      "imagen": "img/rose_goku_clearise.jpg"
+    },
+    {
+      "nombre": "Goku Black Clearise - Dragon Ball Super",
+      "anime": "Dragon Ball",
+      "precio": 18850,
+      "imagen": "img/goku_black_clearise.jpg"
+    },
+    {
+      "nombre": "Broly Clearise - Dragon Ball Super",
+      "anime": "Dragon Ball",
+      "precio": 18850,
+      "imagen": "img/broly_clearise.jpg"
+    },
+    {
+      "nombre": "Gohan Ultimate DXF - Dragon Ball Super Hero",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/gohan_ultimate_dxf.jpg"
+    },
+    {
+      "nombre": "Vegeta DXF - Dragon Ball Super Hero",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/vegeta_dxf.jpg"
+    },
+    {
+      "nombre": "Vegeta Match Makers - Dragon Ball Super Hero",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/vegeta_match_makers.jpg"
+    },
+    {
+      "nombre": "Saiyan Broly Match Makers - Dragon Ball Super",
+      "anime": "Dragon Ball",
+      "precio": 18850,
+      "imagen": "img/saiyan_broly_match_makers.jpg"
+    },
+    {
+      "nombre": "Super God Super Saiyan Gogeta Match Makers - Dragon Ball Super",
+      "anime": "Dragon Ball",
+      "precio": 18850,
+      "imagen": "img/super_god_super_saiyan_gogeta_match_makers.jpg"
+    },
+    {
+      "nombre": "Majin Buu Solid Edge Works - Dragon Ball Z",
+      "anime": "Dragon Ball",
+      "precio": 18850,
+      "imagen": "img/majin_buu_solid_edge_works.jpg"
+    },
+    {
+      "nombre": "Gohan SSJ Blood of Saiyans - Dragon Ball Z",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/gohan_ssj_blood_of_saiyans.jpg"
+    },
+    {
+      "nombre": "Super Saiyan Trunks Blood of Saiyans - Dragon Ball Z",
+      "anime": "Dragon Ball",
+      "precio": 18850,
+      "imagen": "img/super_saiyan_trunks_blood_of_saiyans.jpg"
+    },
+    {
+      "nombre": "Son Goku Chosenshiretsuden 3 - Dragon Ball Z",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/son_goku_chosenshiretsuden_3.jpg"
+    },
+    {
+      "nombre": "Super Saiyan Gotenks Clearise - Dragon Ball Z",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/super_saiyan_gotenks_clearise.jpg"
+    },
+    {
+      "nombre": "Turles G Materia - Dragon Ball Z",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/turles_g_materia.jpg"
+    },
+    {
+      "nombre": "Bardock GXMateria - Dragon Ball Z",
+      "anime": "Dragon Ball",
+      "precio": 18850,
+      "imagen": "img/bardock_gxmateria.jpg"
+    },
+    {
+      "nombre": "Bardock History Box Vol 6 - Dragon Ball Z",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/bardock_history_box_vol_6.jpg"
+    },
+    {
+      "nombre": "Androide 16 Solid Edge Works - Dragon Ball Z",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/androide_16_solid_edge_works.jpg"
+    },
+    {
+      "nombre": "Cooler Solid Edge Works - Dragon Ball Z",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/cooler_solid_edge_works.jpg"
+    },
+    {
+      "nombre": "Frieza Solid Edge Works - Dragon Ball Z",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/frieza_solid_edge_works.jpg"
+    },
+    {
+      "nombre": "Trunks Solid Edge Works Vol 9 - Dragon Ball Z",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/trunks_solid_edge_works_vol_9.jpg"
+    },
+    {
+      "nombre": "Super Saiyan Vegito Solid Works Vol 4 - Dragon Ball Z",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/super_saiyan_vegito_solid_works_vol_4.jpg"
+    },
+    {
+      "nombre": "Super Saiyan 4 Gogeta Blood of Saiyan - Dragon Ball GT",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/super_saiyan_4_gogeta_blood_of_saiyan.jpg"
+    },
+    {
+      "nombre": "Frieza 1st Form Dragon Star - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/frieza_1st_form_dragon_star.jpg"
+    },
+    {
+      "nombre": "Frieza 4th Form Dragon Star - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/frieza_4th_form_dragon_star.jpg"
+    },
+    {
+      "nombre": "Gamma 1 Dragon Star Original - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/gamma_1_dragon_star_original.jpg"
+    },
+    {
+      "nombre": "Gamma 2 Dragon Star Original - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/gamma_2_dragon_star_original.jpg"
+    },
+    {
+      "nombre": "Goku Mini Daima Dragon Star - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 21850,
+      "imagen": "img/goku_mini_daima_dragon_star.jpg"
+    },
+    {
+      "nombre": "Goku Black Dragon Star Original - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/goku_black_dragon_star_original.jpg"
+    },
+    {
+      "nombre": "Goku Super Saiyan 4 Dragon Star - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/goku_super_saiyan_4_dragon_star.jpg"
+    },
+    {
+      "nombre": "Goku Ultra Instinto 30cm - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 17850,
+      "imagen": "img/goku_ultra_instinto_30cm.jpg"
+    },
+    {
+      "nombre": "Golden Frieza Dragon Star - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/golden_frieza_dragon_star.jpg"
+    },
+    {
+      "nombre": "Monkey D Luffy Grandista Original - One Piece",
+      "anime": "One Piece",
+      "precio": 20850,
+      "imagen": "img/monkey_d_luffy_grandista_original.jpg"
+    },
+    {
+      "nombre": "Trafalgar Law Grandista Original - One Piece",
+      "anime": "One Piece",
+      "precio": 21850,
+      "imagen": "img/trafalgar_law_grandista_original.jpg"
+    },
+    {
+      "nombre": "Nero Monkey D Luffy #2 Grandista - One Piece",
+      "anime": "One Piece",
+      "precio": 31350,
+      "imagen": "img/nero_monkey_d_luffy_2_grandista.jpg"
+    },
+    {
+      "nombre": "Hatsune Miku Holiday Memories Golf",
+      "anime": "Hatsune Miku",
+      "precio": 17850,
+      "imagen": "img/hatsune_miku_holiday_memories_golf.jpg"
+    },
+    {
+      "nombre": "Hatsune Miku Racing Ver 2022 Tropical Maid",
+      "anime": "Hatsune Miku",
+      "precio": 17850,
+      "imagen": "img/hatsune_miku_racing_ver_2022_tropical_maid.jpg"
+    },
+    {
+      "nombre": "Killua Memorable Saga - Hunter x Hunter",
+      "anime": "Hunter x Hunter",
+      "precio": 17850,
+      "imagen": "img/killua_memorable_saga.jpg"
+    },
+    {
+      "nombre": "Inosuke Hashibara Ichibansho Resolution - Demon Slayer",
+      "anime": "Demon Slayer",
+      "precio": 37850,
+      "imagen": "img/inouske_hashibara_ichibansho_resolution.jpg"
+    },
+    {
+      "nombre": "Kanao Tsuyuri Ichibansho Resolution - Demon Slayer",
+      "anime": "Demon Slayer",
+      "precio": 37850,
+      "imagen": "img/kanao_tsuyuri_ichibansho_resolution.jpg"
+    },
+    {
+      "nombre": "Zenitsu Agatsuma Ichibansho - Demon Slayer",
+      "anime": "Demon Slayer",
+      "precio": 37850,
+      "imagen": "img/zenitsu_agatsuma_ichibansho.jpg"
+    },
+    {
+      "nombre": "Daki Perfect Form Ichibansho - Demon Slayer",
+      "anime": "Demon Slayer",
+      "precio": 49350,
+      "imagen": "img/daki_perfect_form_ichibansho.jpg"
+    },
+    {
+      "nombre": "Izuku Midoriya Break Time Collection Vol 1 - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/izuku_midoriya_break_time_collection_vol_1.jpg"
+    },
+    {
+      "nombre": "Janemba Dragon Star Original - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/janemba_dragon_star_original.jpg"
+    },
+    {
+      "nombre": "Mahito - Jujutsu Kaisen",
+      "anime": "Jujutsu Kaisen",
+      "precio": 17850,
+      "imagen": "img/mahito.jpg"
+    },
+    {
+      "nombre": "Toge Inumaki - Jujutsu Kaisen",
+      "anime": "Jujutsu Kaisen",
+      "precio": 17850,
+      "imagen": "img/toge_inumaki.jpg"
+    },
+    {
+      "nombre": "Megumi Fushiguro Combination Battle 2 - Jujutsu Kaisen",
+      "anime": "Jujutsu Kaisen",
+      "precio": 17850,
+      "imagen": "img/megumi_fushiguro_combination_battle_2.jpg"
+    },
+    {
+      "nombre": "Yuji Itadori Combination Battle 3 - Jujutsu Kaisen",
+      "anime": "Jujutsu Kaisen",
+      "precio": 17850,
+      "imagen": "img/yuji_itadori_combination_battle_3.jpg"
+    },
+    {
+      "nombre": "Satoru Gojo Diorama - Jujutsu Kaisen",
+      "anime": "Jujutsu Kaisen",
+      "precio": 17850,
+      "imagen": "img/satoru_gojo_diorama.jpg"
+    },
+    {
+      "nombre": "Suguru Geto Diorama - Jujutsu Kaisen",
+      "anime": "Jujutsu Kaisen",
+      "precio": 17850,
+      "imagen": "img/suguru_geto_diorama.jpg"
+    },
+    {
+      "nombre": "Yuji Itadori 2 Jufutsunowaza - Jujutsu Kaisen",
+      "anime": "Jujutsu Kaisen",
+      "precio": 17850,
+      "imagen": "img/yuji_itadori_2_jufutsunowaza.jpg"
+    },
+    {
+      "nombre": "Panda Jukon no Kata - Jujutsu Kaisen",
+      "anime": "Jujutsu Kaisen",
+      "precio": 17850,
+      "imagen": "img/panda_jukon_no_kata.jpg"
+    },
+    {
+      "nombre": "Gojo Satoru King of Artist Special - Jujutsu Kaisen",
+      "anime": "Jujutsu Kaisen",
+      "precio": 17850,
+      "imagen": "img/gojo_satoru_king_of_artist_special.jpg"
+    },
+    {
+      "nombre": "Geto King of Artist Special - Jujutsu Kaisen",
+      "anime": "Jujutsu Kaisen",
+      "precio": 17850,
+      "imagen": "img/geto_king_of_artist_special.jpg"
+    },
+    {
+      "nombre": "Megumi Fushiguro Maximatic 20cm - Jujutsu Kaisen",
+      "anime": "Jujutsu Kaisen",
+      "precio": 20850,
+      "imagen": "img/megumi_fushiguro_maximatic_20cm.jpg"
+    },
+    {
+      "nombre": "Yuji Itadori Break Time Collection Vol 1 - Jujutsu Kaisen",
+      "anime": "Jujutsu Kaisen",
+      "precio": 17850,
+      "imagen": "img/yuji_itadori_break_time_collection_vol_1.jpg"
+    },
+    {
+      "nombre": "Yuji Itadori Combination Battle - Jujutsu Kaisen",
+      "anime": "Jujutsu Kaisen",
+      "precio": 17850,
+      "imagen": "img/yuji_itadori_combination_battle.jpg"
+    },
+    {
+      "nombre": "Katsuki Bakugo #2 Age of Heroes - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/katsuki_bakugo_2_age_of_heroes.jpg"
+    },
+    {
+      "nombre": "Katsuki Bakugo The Amazing Heroes - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/katsuki_bakugo_the_amazing_heroes.jpg"
+    },
+    {
+      "nombre": "Kirby Paldolce Volumen 4 Version A",
+      "anime": "Kirby",
+      "precio": 12485,
+      "imagen": "img/kirby_paldolce_volumen_4_version_a.jpg"
+    },
+    {
+      "nombre": "Majin Boo Forma Final Dragon Star - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/majin_boo_forma_final_dragon_star.jpg"
+    },
+    {
+      "nombre": "Majin Boo Super Dragon Star - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/majin_boo_super_dragon_star.jpg"
+    },
+    {
+      "nombre": "Monkey D Luffy Dioramatic The Brush - One Piece",
+      "anime": "One Piece",
+      "precio": 44850,
+      "imagen": "img/monkey_d_luffy_dioramatic_the_brush.jpg"
+    },
+    {
+      "nombre": "Izuku Midoriya 7th Season - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/izuku_midoriya_7th_season.jpg"
+    },
+    {
+      "nombre": "Katsuki Bakugo 7th Season - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 18850,
+      "imagen": "img/katsuki_bakugo_7th_season.jpg"
+    },
+    {
+      "nombre": "Izuku Midoriya Combination Battle Finale - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/izuku_midoriya_combination_battle_finale.jpg"
+    },
+    {
+      "nombre": "Ochaco Uraraka Glitter Glamours - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/ochaco_uraraka_glitter_glamours.jpg"
+    },
+    {
+      "nombre": "Himiko Toga Glitter Glamours - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/himiko_toga_glitter_glamours.jpg"
+    },
+    {
+      "nombre": "Hawks The Amazing Heroes Plus - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/hawks_the_amazing_heroes_plus.jpg"
+    },
+    {
+      "nombre": "Himiko Toga The Evil Villains Plus - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/himiko_toga_the_evil_villains_plus.jpg"
+    },
+    {
+      "nombre": "Midoriya The Amazing Heroes Plus - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/midoriya_the_amazing_heroes_plus.jpg"
+    },
+    {
+      "nombre": "Izuku Midoriya Amazing Heroes Plus - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/izuku_midoriya_amazing_heroes_plus.jpg"
+    },
+    {
+      "nombre": "Dabi The Evil Villains - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/the_evil_villains.jpg"
+    },
+    {
+      "nombre": "Katsuki Bakugo Edition B - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/katsuki_bakugo_edition_b.jpg"
+    },
+    {
+      "nombre": "Hawks Age of Heroes - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/hawks_age_of_heroes.jpg"
+    },
+    {
+      "nombre": "Katsuki Bakugo Dioromatic The Anime - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 43350,
+      "imagen": "img/katsuki_bakugo_dioromatic_the_anime.jpg"
+    },
+    {
+      "nombre": "Tomura Shigaraki DXF - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/tomura_shigaraki_dxf.jpg"
+    },
+    {
+      "nombre": "Izuku Midoriya Amazing Heroes Version 2 - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/izuku_midoriya_amazing_heroes_version_2.jpg"
+    },
+    {
+      "nombre": "Katsuki Bakugo Amazing Heroes Version 2 - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/katsuki_bakugo_amazing_heroes_version_2.jpg"
+    },
+    {
+      "nombre": "Izuku Midoriya Amazing Heroes Plus Vol 1 - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/izuku_midoriya_amazing_heroes_plus_vol_1.jpg"
+    },
+    {
+      "nombre": "Hawks Amazing Heroes Vol 24 - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/hawks_amazing_heroes_vol_24.jpg"
+    },
+    {
+      "nombre": "Tokoyami Fumikage Amazing Heroes Vol 25 - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/tokoyami_fumikage_amazing_heroes_vol_25.jpg"
+    },
+    {
+      "nombre": "Mirio Togata Amazing Heroes Vol 27 - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/mirio_togata_amazing_heroes_vol_27.jpg"
+    },
+    {
+      "nombre": "Nejire Hado Amazing Heroes Vol 31 - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/nejire_hado_amazing_heroes_vol_31.jpg"
+    },
+    {
+      "nombre": "Eijiro Kirishima Amazing Heroes Vol 35 - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/eijiro_kirishima_amazing_heroes_vol_35.jpg"
+    },
+    {
+      "nombre": "Dabi Evil Villains Vol 5 - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/dabi_evil_villains_vol_5.jpg"
+    },
+    {
+      "nombre": "Nami The Grandline Lady Vol3 - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/nami_the_grandline_lady_vol3.jpg"
+    },
+    {
+      "nombre": "Naruto Uzumaki Articulado Anime Heroes 30cm Mega",
+      "anime": "Naruto",
+      "precio": 17850,
+      "imagen": "img/naruto_uzumaki_articulado_anime_heroes_30cm_mega.jpg"
+    },
+    {
+      "nombre": "Sasuke Uchiha Articulado Anime Heroes 30cm Mega",
+      "anime": "Naruto",
+      "precio": 17850,
+      "imagen": "img/sasuke_uchiha_articulado_anime_heroes_30cm_mega.jpg"
+    },
+    {
+      "nombre": "Tsunade Figure Colosseum - Naruto",
+      "anime": "Naruto",
+      "precio": 17850,
+      "imagen": "img/tsunade_figure_colosseum.jpg"
+    },
+    {
+      "nombre": "Naruto Uzumaki Hokage 20th Aniversario",
+      "anime": "Naruto",
+      "precio": 17850,
+      "imagen": "img/naruto_uzumaki_hokage_20th_aniversario.jpg"
+    },
+    {
+      "nombre": "Naruto Uzumaki Panel Spectacle",
+      "anime": "Naruto",
+      "precio": 18850,
+      "imagen": "img/naruto_uzumaki_panel_spectacle.jpg"
+    },
+    {
+      "nombre": "Hatake Kakashi Effectreme - Naruto Shippuden",
+      "anime": "Naruto",
+      "precio": 17850,
+      "imagen": "img/hatake_kakashi_effectreme.jpg"
+    },
+    {
+      "nombre": "Naruto Uzumaki Panel Spectacle Shippuden",
+      "anime": "Naruto",
+      "precio": 17850,
+      "imagen": "img/naruto_uzumaki_panel_spectacle_shippuden.jpg"
+    },
+    {
+      "nombre": "Gamabunta Soft Vinyl - Naruto",
+      "anime": "Naruto",
+      "precio": 17850,
+      "imagen": "img/gamabunta_soft_vinyl.jpg"
+    },
+    {
+      "nombre": "Naruto Uzumaki Ichiraku",
+      "anime": "Naruto",
+      "precio": 17850,
+      "imagen": "img/naruto_uzumaki_ichiraku.jpg"
+    },
+    {
+      "nombre": "Iruka Umino Ichiraku - Naruto",
+      "anime": "Naruto",
+      "precio": 17850,
+      "imagen": "img/iruka_umino_ichiraku.jpg"
+    },
+    {
+      "nombre": "Gaara & Sasuke Uchiha Vibration Stars - Naruto",
+      "anime": "Naruto",
+      "precio": 17850,
+      "imagen": "img/gaara_sasuke_uchiha_vibration_stars.jpg"
+    },
+    {
+      "nombre": "Hoshigaki Kisame Vibration Stars - Naruto",
+      "anime": "Naruto",
+      "precio": 18850,
+      "imagen": "img/hoshigaki_kisame_vibration_stars.jpg"
+    },
+    {
+      "nombre": "Minato III Vibration Stars - Naruto Shippuden",
+      "anime": "Naruto",
+      "precio": 17850,
+      "imagen": "img/minato_namikaze_vibration_stars.jpg"
+    },
+    {
+      "nombre": "Gaara Vibration Stars - Naruto",
+      "anime": "Naruto",
+      "precio": 17850,
+      "imagen": "img/gaara_vibration_stars.jpg"
+    },
+    {
+      "nombre": "Shinobu Oshino Monogatari Series Espresto",
+      "anime": "Monogatari Series",
+      "precio": 17850,
+      "imagen": "img/shinobu_oshino_monogatari_series_espresto.jpg"
+    },
+    {
+      "nombre": "Gol D Roger King of Artist Oden Special A - One Piece",
+      "anime": "One Piece",
+      "precio": 20850,
+      "imagen": "img/gol_d_roger_king_of_artist_oden_special_a.jpg"
+    },
+    {
+      "nombre": "Gol D Roger King of Artist Oden Special B - One Piece",
+      "anime": "One Piece",
+      "precio": 20850,
+      "imagen": "img/gol_d_roger_king_of_artist_oden_special_b.jpg"
+    },
+    {
+      "nombre": "Battle Record Collection Nami Egghead - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/battle_record_collection_name.jpg"
+    },
+    {
+      "nombre": "Brook Articulado Anime Heroes - One Piece",
+      "anime": "One Piece",
+      "precio": 20850,
+      "imagen": "img/brook_articulado_anime_heroes.jpg"
+    },
+    {
+      "nombre": "Chopper Paldolce Version A - One Piece",
+      "anime": "One Piece",
+      "precio": 10350,
+      "imagen": "img/chopper_paldolce_version_a.jpg"
+    },
+    {
+      "nombre": "Chopper Paldolce Version A Edition 2 - One Piece",
+      "anime": "One Piece",
+      "precio": 10350,
+      "imagen": "img/chopper_paldolce_version_a_edition_2.jpg"
+    },
+    {
+      "nombre": "Chopper Paldolce Version B - One Piece",
+      "anime": "One Piece",
+      "precio": 10350,
+      "imagen": "img/chopper_paldolce_version_b.jpg"
+    },
+    {
+      "nombre": "Chopper Paldolce Version B Edition 2 - One Piece",
+      "anime": "One Piece",
+      "precio": 10350,
+      "imagen": "img/chopper_paldolce_version_b_edition_2.jpg"
+    },
+    {
+      "nombre": "Chopper Paldolce Version C - One Piece",
+      "anime": "One Piece",
+      "precio": 10350,
+      "imagen": "img/chopper_paldolce_version_c.jpg"
+    },
+    {
+      "nombre": "Chopper Paldolce Version C Edition 2 - One Piece",
+      "anime": "One Piece",
+      "precio": 10350,
+      "imagen": "img/chopper_paldolce_version_c_edition_2.jpg"
+    },
+    {
+      "nombre": "Chopper Articulado Anime Heroes - One Piece",
+      "anime": "One Piece",
+      "precio": 20850,
+      "imagen": "img/chopper_articulado_anime_heroes.jpg"
+    },
+    {
+      "nombre": "Sanji Chronicle King of the Artist - One Piece",
+      "anime": "One Piece",
+      "precio": 29850,
+      "imagen": "img/sanji_chronicle_king_of_the_artist.jpg"
+    },
+    {
+      "nombre": "Monkey D Luffy Chronicle King of the Artist - One Piece",
+      "anime": "One Piece",
+      "precio": 29850,
+      "imagen": "img/monkey_d_luffy_chronicle_king_of_the_artist.jpg"
+    },
+    {
+      "nombre": "Dracule Mihawk Articulado Anime Heroes - One Piece",
+      "anime": "One Piece",
+      "precio": 20850,
+      "imagen": "img/dracule_mihawk_articulado_anime_heroes.jpg"
+    },
+    {
+      "nombre": "Shanks DXF Posing - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/shanks_dxf_posing.jpg"
+    },
+    {
+      "nombre": "Komurasaki Grandline Lady Extra - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/komurasaki_grandline_lady_extra.jpg"
+    },
+    {
+      "nombre": "Ulti Grandline Lady Wano Kuni Vol 11 - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/ulti_grandline_lady_wano_kuni_vol_11.jpg"
+    },
+    {
+      "nombre": "Izou Grandline Lady Wano Kuni Vol 26 - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/izou_grandline_lady_wano_kuni_vol_26.jpg"
+    },
+    {
+      "nombre": "Carrot Grandline Lady Wano Kuni Vol 9 - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/carrot_grandline_lady_wano_kuni_vol_9.jpg"
+    },
+    {
+      "nombre": "Franky Grandline Men Vol 20 - One Piece",
+      "anime": "One Piece",
+      "precio": 18850,
+      "imagen": "img/franky_grandline_men_vol_20.jpg"
+    },
+    {
+      "nombre": "Usopp Grandline Men Vol 7 - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/usopp_grandline_men_vol_7.jpg"
+    },
+    {
+      "nombre": "Brook Grandline Men Vol 9 - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/brook_grandline_men_vol_9.jpg"
+    },
+    {
+      "nombre": "Sanji Grandline Men Wano Kuni Vol 20 - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/sanji_grandline_men_wano_kuni_vol_20.jpg"
+    },
+    {
+      "nombre": "Luffy Grandline Men Wano Kuni Vol 24 - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/luffy_grandline_men_wano_kuni_vol_24.jpg"
+    },
+    {
+      "nombre": "Benn Beckman Grandline Series Extra - One Piece",
+      "anime": "One Piece",
+      "precio": 16350,
+      "imagen": "img/benn_beckman_grandline_series_extra.jpg"
+    },
+    {
+      "nombre": "Stussy Grandline Series Egghead - One Piece",
+      "anime": "One Piece",
+      "precio": 16350,
+      "imagen": "img/stussy_grandline_series_egghead.jpg"
+    },
+    {
+      "nombre": "Zoro Film Red Grandline Men Vol 3 - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/zoro_film_red_grandline_men_vol_3.jpg"
+    },
+    {
+      "nombre": "Monkey D Luffy Film Red Senkozekkei - One Piece",
+      "anime": "One Piece",
+      "precio": 18850,
+      "imagen": "img/monkey_d_luffy_film_red_senkozekkei.jpg"
+    },
+    {
+      "nombre": "Shanks Film Red Senkozekkei - One Piece",
+      "anime": "One Piece",
+      "precio": 18850,
+      "imagen": "img/shanks_film_red_senkozekkei.jpg"
+    },
+    {
+      "nombre": "Monkey D Luffy Gear 5 Vol 1 - One Piece",
+      "anime": "One Piece",
+      "precio": 16350,
+      "imagen": "img/monkey_d_luffy_gear_5_vol_1.jpg"
+    },
+    {
+      "nombre": "Tony Chopper Fluffy Puffy Version A - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/tony_chopper_fluffy_puffy_version_a.jpg"
+    },
+    {
+      "nombre": "Franky Articulado Anime Heroes - One Piece",
+      "anime": "One Piece",
+      "precio": 20850,
+      "imagen": "img/franky_articulado_anime_heroes.jpg"
+    },
+    {
+      "nombre": "Nico Robin Glitter & Glamours Splash Style - One Piece",
+      "anime": "One Piece",
+      "precio": 18850,
+      "imagen": "img/nico_robin_glitter_and_glamours_splash_style.jpg"
+    },
+    {
+      "nombre": "Shirahoshi Glitter & Glamours - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/shirahoshi_glitter_and_glamours.jpg"
+    },
+    {
+      "nombre": "Nefertari Vivi Glitter & Glamours - One Piece",
+      "anime": "One Piece",
+      "precio": 18850,
+      "imagen": "img/nefetari_vivi_glitter_and_glamours.jpg"
+    },
+    {
+      "nombre": "Nami Grandista Nero 25cm - One Piece",
+      "anime": "One Piece",
+      "precio": 26850,
+      "imagen": "img/nami_grandista_nero_25cm.jpg"
+    },
+    {
+      "nombre": "Nico Robin Grandline Girls on Vacation Version A - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/nico_robin_grandline_girls_on_vacation_version_a.jpg"
+    },
+    {
+      "nombre": "Momonosuke Ichibansho DXF Special - One Piece",
+      "anime": "One Piece",
+      "precio": 29350,
+      "imagen": "img/momonosuke_ichibansho_dxf_special.jpg"
+    },
+    {
+      "nombre": "Monkey D Luffy & Enel Log Stories - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/monkey_d_luffy_enel_log_stories.jpg"
+    },
+    {
+      "nombre": "Monkey D Luffy vs Sea Monster Log Stories - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/monkey_d_luffy_vs_sea_monster_log_stories.jpg"
+    },
+    {
+      "nombre": "Luffy Gear 5 WCF - One Piece",
+      "anime": "One Piece",
+      "precio": 18850,
+      "imagen": "img/luffy_gear_5_wcf.jpg"
+    },
+    {
+      "nombre": "Kaido Mega World Collectable - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/kaido_mega_world_collectable.jpg"
+    },
+    {
+      "nombre": "Monkey D Luffy Battle Record Collection Egghead- One Piece",
+      "anime": "One Piece",
+      "precio": 18850,
+      "imagen": "img/monkey_d_luffy_battle_record_collection.jpg"
+    },
+    {
+      "nombre": "Monkey D Luffy Dressrosa Articulado Anime Heroes - One Piece",
+      "anime": "One Piece",
+      "precio": 20850,
+      "imagen": "img/monkey_d_luffy_dressrosa_articulado_anime_heroes.jpg"
+    },
+    {
+      "nombre": "Monkey D Luffy Gear 5 Vol 4 - One Piece",
+      "anime": "One Piece",
+      "precio": 18850,
+      "imagen": "img/monkey_d_luffy_gear_5_vol_4.jpg"
+    },
+    {
+      "nombre": "Nami Grandline Girls on Vacation Version A - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/nami_grandline_girls_on_vacation_version_a.jpg"
+    },
+    {
+      "nombre": "Portgas D Ace Articulado Anime Heroes - One Piece",
+      "anime": "One Piece",
+      "precio": 20850,
+      "imagen": "img/portgas_d_ace_articulado_anime_heroes.jpg"
+    },
+    {
+      "nombre": "Roronoa Zoro Battle Record Collection - One Piece",
+      "anime": "One Piece",
+      "precio": 18850,
+      "imagen": "img/roronoa_zoro_battle_record_collection.jpg"
+    },
+    {
+      "nombre": "Sabo Articulado Anime Heroes - One Piece",
+      "anime": "One Piece",
+      "precio": 20850,
+      "imagen": "img/sabo_articulado_anime_heroes.jpg"
+    },
+    {
+      "nombre": "Sanji Articulado Anime Heroes - One Piece",
+      "anime": "One Piece",
+      "precio": 20850,
+      "imagen": "img/sanji_articulado_anime_heroes.jpg"
+    },
+    {
+      "nombre": "Roronoa Zoro Senkozekkei - One Piece",
+      "anime": "One Piece",
+      "precio": 16350,
+      "imagen": "img/roronoa_zoro_senkozekkei.jpg"
+    },
+    {
+      "nombre": "Dracule Mihawk Senkozekkei - One Piece",
+      "anime": "One Piece",
+      "precio": 16350,
+      "imagen": "img/dracule_mihawk_senkozekkei.jpg"
+    },
+    {
+      "nombre": "Marshall D Teach Senkozekkei - One Piece",
+      "anime": "One Piece",
+      "precio": 18850,
+      "imagen": "img/marshall_d_teach_senkozekkei.jpg"
+    },
+    {
+      "nombre": "Portgas D Ace Senkozekkei - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/portgas_d_ace_senkozekkei.jpg"
+    },
+    {
+      "nombre": "Trafalgar Law Senkozekkei - One Piece",
+      "anime": "One Piece",
+      "precio": 18850,
+      "imagen": "img/trafalgar_law_senkozekkei.jpg"
+    },
+    {
+      "nombre": "Yamato Senkozekkei - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/yamato_senkozekkei.jpg"
+    },
+    {
+      "nombre": "Shanks Articulado Anime Heroes - One Piece",
+      "anime": "One Piece",
+      "precio": 20850,
+      "imagen": "img/shanks_articulado_anime_heroes.jpg"
+    },
+    {
+      "nombre": "Chopper Arabasta Sofvimates - One Piece",
+      "anime": "One Piece",
+      "precio": 18850,
+      "imagen": "img/chopper_arabasta_sofvimates.jpg"
+    },
+    {
+      "nombre": "Chopper Dressrosa Sofvimates - One Piece",
+      "anime": "One Piece",
+      "precio": 16350,
+      "imagen": "img/chopper_dressrosa_sofvimates.jpg"
+    },
+    {
+      "nombre": "Chopper Fish Man Island Sofvimates - One Piece",
+      "anime": "One Piece",
+      "precio": 18850,
+      "imagen": "img/chopper_fish_man_island_sofvimates.jpg"
+    },
+    {
+      "nombre": "Karoo Sofvimates - One Piece",
+      "anime": "One Piece",
+      "precio": 18850,
+      "imagen": "img/karoo_sofvimates.jpg"
+    },
+    {
+      "nombre": "Kung Fu Dugong Sofvimates - One Piece",
+      "anime": "One Piece",
+      "precio": 16350,
+      "imagen": "img/kung_fu_dugong_sofvimates.jpg"
+    },
+    {
+      "nombre": "Roronoa Zoro Grandista Edición Especial - One Piece",
+      "anime": "One Piece",
+      "precio": 32850,
+      "imagen": "img/roronoa_zoro_grandista_edicion_especial.jpg"
+    },
+    {
+      "nombre": "Shanks Grandline Children DXF - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/shanks_grandline_children_dxf.jpg"
+    },
+    {
+      "nombre": "Tony Chopper Grandline Men Vol 5 - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/tony_chopper_grandline_men_vol_5.jpg"
+    },
+    {
+      "nombre": "Tony Chopper Grandline Men Wano Kuni Vol 19 - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/tony_chopper_grandline_men_wano_kuni_vol_19.jpg"
+    },
+    {
+      "nombre": "Jewelry Bonney Grandline Series Egghead - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/jewelry_bonney_grandline_series_egghead.jpg"
+    },
+    {
+      "nombre": "Nico Robin Grandline Series Egghead - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/nico_robin_grandline_series_egghead.jpg"
+    },
+    {
+      "nombre": "Roronoa Zoro Grandline Series Egghead - One Piece",
+      "anime": "One Piece",
+      "precio": 18850,
+      "imagen": "img/roronoa_zoro_grandline_series_egghead.jpg"
+    },
+    {
+      "nombre": "Shanks Grandline Series Extra - One Piece",
+      "anime": "One Piece",
+      "precio": 18850,
+      "imagen": "img/shanks_grandline_series_extra.jpg"
+    },
+    {
+      "nombre": "Rob Lucci King of the Artist - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/rob_lucci_king_of_the_artist.jpg"
+    },
+    {
+      "nombre": "Crocodile The Shukko - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/crocodile_the_shukko.jpg"
+    },
+    {
+      "nombre": "Dracule Mihawk The Shukko - One Piece",
+      "anime": "One Piece",
+      "precio": 18850,
+      "imagen": "img/dracule_mihawk_the_shukko.jpg"
+    },
+    {
+      "nombre": "Monkey D Luffy The Shukko - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/monkey_d_luffy_the_shukko.jpg"
+    },
+    {
+      "nombre": "Roronoa Zoro The Shukko Special - One Piece",
+      "anime": "One Piece",
+      "precio": 18850,
+      "imagen": "img/roronoa_zoro_the_shukko_special.jpg"
+    },
+    {
+      "nombre": "Monkey D Luffy The Shukko Edition 2 - One Piece",
+      "anime": "One Piece",
+      "precio": 16350,
+      "imagen": "img/monkey_d_luffy_the_shukko_edition_2.jpg"
+    },
+    {
+      "nombre": "Trafalgar Law Articulado Anime Heroes - One Piece",
+      "anime": "One Piece",
+      "precio": 20850,
+      "imagen": "img/trafalgar_law_articulado_anime_heroes.jpg"
+    },
+    {
+      "nombre": "Usopp Articulado Anime Heroes - One Piece",
+      "anime": "One Piece",
+      "precio": 20850,
+      "imagen": "img/usopp_articulado_anime_heroes.jpg"
+    },
+    {
+      "nombre": "Monkey D Luffy Gears World Collectable - One Piece",
+      "anime": "One Piece",
+      "precio": 7485,
+      "imagen": "img/monkey_d_luffy_gears_world_collectable.jpg"
+    },
+    {
+      "nombre": "Sabo World Collectable - One Piece",
+      "anime": "One Piece",
+      "precio": 18850,
+      "imagen": "img/sabo_world_collectable.jpg"
+    },
+    {
+      "nombre": "Boa Hancock Salome World Collectable Special - One Piece",
+      "anime": "One Piece",
+      "precio": 16350,
+      "imagen": "img/boa_hancock_salome_world_collectable_special.jpg"
+    },
+    {
+      "nombre": "Zoro Roronoa 3 Espadas Articulado Anime Heroes - One Piece",
+      "anime": "One Piece",
+      "precio": 20850,
+      "imagen": "img/zoro_roronoa_3_espadas_articulado_anime_heroes.jpg"
+    },
+    {
+      "nombre": "Kana Arima Air Flow - Oshi no Ko",
+      "anime": "Oshi no Ko",
+      "precio": 17850,
+      "imagen": "img/kana_arima_air_flow.jpg"
+    },
+    {
+      "nombre": "Ruby Air Flow - Oshi no Ko",
+      "anime": "Oshi no Ko",
+      "precio": 17850,
+      "imagen": "img/ruby_air_flow.jpg"
+    },
+    {
+      "nombre": "Jupiter Glitter and Glamorous - Sailor Moon Eternal",
+      "anime": "Sailor Moon",
+      "precio": 17850,
+      "imagen": "img/jupiter_glitter_and_glamorous.jpg"
+    },
+    {
+      "nombre": "Mars Glitter and Glamorous - Sailor Moon Eternal",
+      "anime": "Sailor Moon",
+      "precio": 17850,
+      "imagen": "img/mars_glitter_and_glamorous.jpg"
+    },
+    {
+      "nombre": "Venus Glitter and Glamorous - Sailor Moon Eternal",
+      "anime": "Sailor Moon",
+      "precio": 17850,
+      "imagen": "img/venus_glitter_and_glamorous.jpg"
+    },
+    {
+      "nombre": "Hello Kitty Nakayoshi Memories - Sanrio",
+      "anime": "Sanrio",
+      "precio": 14850,
+      "imagen": "img/hello_kitty_nakayoshi_memories.jpg"
+    },
+    {
+      "nombre": "Cinnamoroll Nakayoshi Memories - Sanrio",
+      "anime": "Sanrio",
+      "precio": 14850,
+      "imagen": "img/cinnamoroll_nakayoshi_memories.jpg"
+    },
+    {
+      "nombre": "My Melody Nakayoshi Memories - Sanrio",
+      "anime": "Sanrio",
+      "precio": 14850,
+      "imagen": "img/my_melody_nakayoshi_memories.jpg"
+    },
+    {
+      "nombre": "Kuromi Nakayoshi Memories - Sanrio",
+      "anime": "Sanrio",
+      "precio": 14850,
+      "imagen": "img/kuromi_nakayoshi_memories.jpg"
+    },
+    {
+      "nombre": "My Melody Sofvimates - Sanrio",
+      "anime": "Sanrio",
+      "precio": 14850,
+      "imagen": "img/my_melody_sofvimates.jpg"
+    },
+    {
+      "nombre": "Cinnamoroll Star Sofvimates 10cm - Sanrio",
+      "anime": "Sanrio",
+      "precio": 14850,
+      "imagen": "img/cinnamoroll_star_sofvimates_10cm.jpg"
+    },
+    {
+      "nombre": "Shoto Todoroki Break Time Collection Vol 3 - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/shoto_todoroki_break_time_collection_vol_3.jpg"
+    },
+    {
+      "nombre": "Shoto Todoroki The Amazing Heroes - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/shoto_todoroki_the_amazing_heroes.jpg"
+    },
+    {
+      "nombre": "Shoto Todoroki The Amazing Heroes Edition 2 - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/shoto_todoroki_the_amazing_heroes_edition_2.jpg"         
+    },
+    {
+      "nombre": "Anya Forger School Style Espresto - Spy x Family",
+      "anime": "Spy x Family",
+      "precio": 20850,
+      "imagen": "img/anya_forger_school_style_espresto.jpg"
+    },
+    {
+      "nombre": "Ram Relax Time - Starting Life in Another World",
+      "anime": "Re:Zero",
+      "precio": 17850,
+      "imagen": "img/ram_relax_time.jpg"
+    },
+    {
+      "nombre": "Super Baby 2 Dragon Star Original - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/super_baby_2_dragon_star_original.jpg"
+    },
+    {
+      "nombre": "Super Saiyan 2 Gohan Dragon Star Original - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/super_saiyan_2_gohan_dragon_star_original.jpg"
+    },
+    {
+      "nombre": "Super Saiyan 4 Gogeta Dragon Star - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 22850,
+      "imagen": "img/super_saiyan_4_gogeta_dragon_star.jpg"
+    },
+    {
+      "nombre": "Super Saiyan Gogeta Blue Dragon Star - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/super_saiyan_gogeta_blue_dragon_star.jpg"
+    },
+    {
+      "nombre": "Super Saiyan Gogeta Dragon Star - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/super_saiyan_gogeta_dragon_star.jpg"
+    },
+    {
+      "nombre": "Super Saiyan Goku 3 Dragon Star - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/super_saiyan_goku_3_dragon_star.jpg"
+    },
+    {
+      "nombre": "Super Saiyan Goku Rose Black Dragon Star - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 22850,
+      "imagen": "img/super_saiyan_goku_rose_black_dragon_star.jpg"
+    },
+    {
+      "nombre": "Super Saiyan Vegeta Blue Dragon Star - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 22850,
+      "imagen": "img/super_saiyan_vegeta_blue_dragon_star.jpg"
+    },
+    {
+      "nombre": "Super Saiyan Vegito Blue Dragon Star Original - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/super_saiyan_vegito_blue_dragon_star_original.jpg"
+    },
+    {
+      "nombre": "Super Saiyan Vegito Dragon Star - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/super_saiyan_vegito_dragon_star.jpg"
+    },
+    {
+      "nombre": "Super Yi Shinron Dragon Star Original - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/super_yi_shinron_dragon_star_original.jpg"
+    },
+    {
+      "nombre": "Milim Dragon Form Otherworlder Plus - That Time I Got Reincarnated as a Slime",
+      "anime": "That Time I Got Reincarnated as a Slime",
+      "precio": 17850,
+      "imagen": "img/milim_dragon_form_otherworlder_plus.jpg"
+    },
+    {
+      "nombre": "Chiyoko Sonoda - The Idolmaster Shiny Colors",
+      "anime": "The Idolmaster",
+      "precio": 17850,
+      "imagen": "img/chiyoko_sonoda.jpg"
+    },
+    {
+      "nombre": "Konjiki no Yami Glitter & Glamours - To Love-Ru Darkness",
+      "anime": "To Love-Ru",
+      "precio": 17850,
+      "imagen": "img/konjiki_no_yami_glitter_and_glamours.jpg"
+    },
+    {
+      "nombre": "Yui Kotegawa Glitter & Glamours - To Love-Ru Darkness",
+      "anime": "To Love-Ru",
+      "precio": 17850,
+      "imagen": "img/yui_kotegawa_glitter_and_glamours.jpg"
+    },
+    {
+      "nombre": "Nana Astar Deviluke Glitter & Glamorous - To Love-Ru Darkness",
+      "anime": "To Love-Ru",
+      "precio": 17850,
+      "imagen": "img/nana_astar_deviluke_glitter_and_glamorous.jpg"
+    },
+    {
+      "nombre": "Yae Amagami Bunny - Tying the Knot with an Amagami Sister",
+      "anime": "Tying the Knot with an Amagami Sister",
+      "precio": 17850,
+      "imagen": "img/yae_amagami_bunny.jpg"
+    },
+    {
+      "nombre": "Ochako Uraraka Break Time Collection Vol 4 - My Hero Academia",
+      "anime": "My Hero Academia",
+      "precio": 17850,
+      "imagen": "img/ochako_uraraka_break_time_collection_vol_4.jpg"
+    },
+    {
+      "nombre": "Naruto Uzumaki Memorable Saga",
+      "anime": "Naruto",
+      "precio": 17850,
+      "imagen": "img/naruto_uzumaki_memorable_saga.jpg"
+    },
+    {
+      "nombre": "Vegeta Mini Daima Dragon Star - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 21850,
+      "imagen": "img/vegeta_mini_daima_dragon_star.jpg"
+    },
+    {
+      "nombre": "Vegeta Dragon Star - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/vegeta_dragon_star.jpg"
+    },
+    {
+      "nombre": "Vegeta Super Hero Dragon Star - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 20850,
+      "imagen": "img/vegeta_super_hero_dragon_star.jpg"
+    },
+    {
+      "nombre": "Hiei Black Dragon Wave Effect - Yu Yu Hakusho",
+      "anime": "Yu Yu Hakusho",
+      "precio": 17850,
+      "imagen": "img/hiei_black_dragon_wave_effect.jpg"
+    },
+    {
+      "nombre": "Rem Relax Time - Starting Life in Another World",
+      "anime": "Re:Zero",
+      "precio": 17850,
+      "imagen": "img/rem_relax_time.jpg"
+    },
+    {
+      "nombre": "Crocodile Grandline Series Extra - One Piece",
+      "anime": "One Piece",
+      "precio": 17850,
+      "imagen": "img/crocodile_grandline_series_extra.jpg"
+    },
+    {
+      "nombre": "Peluche Cabello Goku Super Saiyan Blue - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 16350,
+      "imagen": "img/peluche_cabello_goku_super_saiyan_blue.jpg"
+    },
+    {
+      "nombre": "Peluche Cabello Goku Super Saiyan Clásico - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 16350,
+      "imagen": "img/peluche_cabello_goku_super_saiyan_clasico.jpg"
+    },
+    {
+      "nombre": "Mika Jougasaki Glitter Dress - The Idolmaster Cinderella Gills",
+      "anime": "The Idolmaster",
+      "precio": 17850,
+      "imagen": "img/mika_jougasaki_glitter_dress.jpg"
+    },
+    {
+      "nombre": "Torneo Mundial de Artes Marciales Dragon Star - Dragon Ball",
+      "anime": "Dragon Ball",
+      "precio": 34850,
+      "imagen": "img/torneo_mundial_de_artes_marciales_dragon_star.jpg"
+    }
+  ]
+};
+
+    function formatPrice(price) {
+      return "₡" + new Intl.NumberFormat("es-CR").format(price);
+    }
+
+    function renderProducts(lista) {
+      const catalog = document.getElementById("catalog");
+      const resultsCount = document.getElementById("results-count");
+
+      catalog.innerHTML = "";
+      resultsCount.textContent = `${lista.length} producto(s) encontrado(s)`;
+
+      if (lista.length === 0) {
+        catalog.innerHTML = `<div>No se encontraron resultados</div>`;
+        return;
+      }
+
+      lista.forEach(producto => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <img src="${producto.imagen}" alt="${producto.nombre}">
+          <h3>${producto.nombre}</h3>
+          <span class="anime-tag">${producto.anime}</span>
+          <div class="price">${formatPrice(producto.precio)}</div>
+          <button class="interest-btn">
+            <svg class="instagram-icon" viewBox="0 0 24 24" fill="white">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+            Consultar figura (DM)
+          </button>
+        `;
+        card.querySelector(".interest-btn").addEventListener("click", () => {
+  redirectToInstagram(producto.nombre);
+});
+        catalog.appendChild(card);
+      });
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => alert("✅ Copiado: " + text));
+    }
+
+    function redirectToInstagram(productName) {
+  // Crear el mensaje con el nombre del producto
+  const message = `Hola, me interesa esta figura: "${productName}"`;
+  
+  // Copiar el mensaje al portapapeles
+  navigator.clipboard.writeText(message).then(() => {
+    // Mostrar el modal en ambos dispositivos
+    showInstagramModal(message);
+  }).catch(err => {
+    // Fallback para navegadores más antiguos
+    const textArea = document.createElement('textarea');
+    textArea.value = message;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+    
+    // Mostrar el modal
+    showInstagramModal(message);
+  });
+}
+
+function showInstagramModal(message) {
+  // Detectar si es un dispositivo móvil
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  
+  // Crear el modal
+  const modal = document.createElement('div');
+  modal.style.position = 'fixed';
+  modal.style.top = '0';
+  modal.style.left = '0';
+  modal.style.width = '100%';
+  modal.style.height = '100%';
+  modal.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+  modal.style.display = 'flex';
+  modal.style.justifyContent = 'center';
+  modal.style.alignItems = 'center';
+  modal.style.zIndex = '1000';
+  
+  // Contenido del modal
+  modal.innerHTML = `
+    <div style="background: white; padding: 25px; border-radius: 12px; text-align: center; max-width: 400px; width: 90%;">
+      <h3 style="margin-top: 0; color: #333;">¡Mensaje copiado!</h3>
+      <p style="margin-bottom: 20px; color: #555;">Copia y pega este mensaje a <strong>kamilinecr</strong> en DM:</p>
+      <div style="background: #f8f8f8; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px dashed #ccc;">
+        <p style="margin: 0; word-break: break-word;">${message}</p>
+      </div>
+      <div style="display: flex; gap: 10px; justify-content: center;">
+        <button id="copyAgainBtn" style="padding: 10px 15px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">Copiar de nuevo</button>
+        <button id="goToProfileBtn" style="padding: 10px 15px; background: #405DE6; color: white; border: none; border-radius: 5px; cursor: pointer;">Ir al perfil</button>
+      </div>
+    </div>
+  `;
+  
+  // Añadir el modal al documento
+  document.body.appendChild(modal);
+  
+  // Botón para copiar de nuevo
+  document.getElementById('copyAgainBtn').addEventListener('click', () => {
+    navigator.clipboard.writeText(message);
+  });
+  
+  // Botón para ir al perfil - Comportamiento diferente según el dispositivo
+  document.getElementById('goToProfileBtn').addEventListener('click', () => {
+    if (isMobile) {
+      // Para móviles: intentar abrir la app nativa de Instagram
+      const appUrl = `instagram://user?username=kamilinecr`;
+      window.location.href = appUrl;
+      
+      // Si la app no está instalada, redirigir a la web después de un tiempo
+      setTimeout(function() {
+        window.location.href = 'https://www.instagram.com/kamilinecr/';
+      }, 500);
+    } else {
+      // Para desktop: abrir Instagram web en nueva pestaña
+      window.open('https://www.instagram.com/kamilinecr/', '_blank');
+    }
+    
+    // Cerrar el modal
+    document.body.removeChild(modal);
+  });
+  
+  // Cerrar el modal al hacer clic fuera
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      document.body.removeChild(modal);
+    }
+  });
+}
+    function buscarProductos() {
+      const searchTerm = document.getElementById("search").value.toLowerCase().trim();
+      const filtrados = data.productos.filter(p =>
+        p.nombre.toLowerCase().includes(searchTerm) ||
+        p.anime.toLowerCase().includes(searchTerm)
+      );
+      renderProducts(filtrados);
+    }
+
+    document.getElementById("search").addEventListener("input", buscarProductos);
+
+    // Cargar al inicio
+    document.addEventListener("DOMContentLoaded", () => {
+      renderProducts(data.productos);
+    });
+  </script>
+</body>
+</html>
